@@ -155,7 +155,7 @@ do
 } while (collisionSnake(foodXY[0], foodXY[1], snakeXY, snakeLength, 0)); //This should prevent the "Food" from being created on top of the snake. - However the food has a chance to be created ontop of the snake, in which case the snake should eat it...
 
 set_cursor_to_LCD(foodXY[0] ,foodXY[1]);
-Display_to_LCD("*");
+Display_to_LCD("@");
 
 return(0);
 }
@@ -227,14 +227,14 @@ Display_to_LCD(" ");
 //gotoxy(snakeXY[0][0],snakeXY[1][0]);
 set_cursor_to_LCD(snakeXY[0][0],snakeXY[1][0]);
 //printf("%c", SNAKE_BODY);
-Display_to_LCD("o");
+Display_to_LCD("*");
 
 moveSnakeArray(snakeXY, snakeLength, direction);
 
 //gotoxy(snakeXY[0][0],snakeXY[1][0]);
 set_cursor_to_LCD(snakeXY[0][0],snakeXY[1][0]);
    //printf(n]"%c",SNAKE_HEAD);
-Display_to_LCD("O");
+Display_to_LCD("*");
 
 //gotoxy(1,1); //Gets rid of the darn flashing underscore.
 set_cursor_to_LCD(1,1);
@@ -289,7 +289,7 @@ for (i = 0; i < snakeLength; i++)
     //gotoxy(snakeXY[0][i], snakeXY[1][i]);
     set_cursor_to_LCD(snakeXY[0][i], snakeXY[1][i]);
     //printf("%c", SNAKE_BODY); //Meh, at some point I should make it so the snake starts off with a head...
-    Display_to_LCD("o");
+    Display_to_LCD("*");
 }
 
 return;
@@ -320,8 +320,10 @@ void gameOverScreen(void)
 {
 // int x = 17, y = 3;
 
-set_cursor_to_LCD(15,3);
+set_cursor_to_LCD(25,3);
 Display_to_LCD("GAME OVER!");
+set_cursor_to_LCD(10, 4);
+Display_to_LCD("PRESS TO CONTINUE");
 waitForAnyKey();
 clrscr(); //clear the console
 return;
@@ -444,6 +446,8 @@ return;
 
 int main()
 {
+    int c;
+    
     /* Try open the LCD dev file */
     fd = open(SSD1306_DEV_FILE, O_WRONLY);
 
@@ -454,8 +458,26 @@ int main()
     }
 
     system("clear");  
+    write(fd, "clear", 5);
    
+   do {
     loadGame();
-    return 0;
+    write(fd, "clear", 5);
+    set_cursor_to_LCD(25, 2);
+    Display_to_LCD("PLAY AGAIN ?");
+    set_cursor_to_LCD(5, 3);
+    Display_to_LCD("1. YES   Other. NO");
+    scanf("%d", &c);
+    if ( c == 1)
+    {
+        write(fd, "clear", 5);
+    }
+   } while ( c == 1 );
+   
+    write(fd, "clear", 5);
+    set_cursor_to_LCD(30, 3);
+    Display_to_LCD("  END GAME !");
+   
+   return 0;
 
 }

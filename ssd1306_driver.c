@@ -72,8 +72,10 @@ static int ssd1306_probe(struct i2c_client *client, const struct i2c_device_id *
 	i2c_set_clientdata(client, module_ssd);
 
 	ssd1306_display_init(module_ssd);
-	ssd1306_set_cursor(module_ssd, 1, 0);
-	//ssd1306_print_string(module_ssd, "Irene Bae Joo hello\n");
+	ssd1306_set_cursor(module_ssd, 3, 2);
+	ssd1306_print_string(module_ssd, "This is Snake Game");
+    ssd1306_set_cursor(module_ssd, 4, 2);
+	ssd1306_print_string(module_ssd, "Enjoy this moment !");
 	pr_info("Probe function done \n");
 
 
@@ -84,9 +86,10 @@ static int ssd1306_remove(struct i2c_client *client)
 {
     pr_info("Starting remove process\n");
     module_ssd = i2c_get_clientdata(client);
-
-    ssd1306_print_string(module_ssd, "Irene Bae Joo good bye\n");
-    msleep(500);
+    ssd1306_clear_full(module_ssd);
+    ssd1306_set_cursor(module_ssd, 4, 0);
+    ssd1306_print_string(module_ssd, "Thanks for visiting. Good bye !");
+    msleep(1000);
     ssd1306_clear_full(module_ssd);
     ssd1306_write(module_ssd, true, 0xAE); // Entire Display OFF
     kfree(module_ssd);
